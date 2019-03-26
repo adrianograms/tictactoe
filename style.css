@@ -1,9 +1,17 @@
 table{
-  width: 400px;
-  height: 400px;
+  width: 600px;
+  height: 600px;
   margin: auto;
-  margin-top: 10%;
+  margin-top: 2%;
 }
 table, tr, th, td{
   border: 1px solid black;
+  box-sizing: content-box;
+}
+
+.b{
+  display: inline-block
+}
+div{
+  text-align: center;
 }
