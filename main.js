@@ -1,5 +1,7 @@
 var cells= [];
 
+
+
 var bx = document.getElementById('x');
 var bc = document.getElementById('circle');
 
@@ -7,6 +9,7 @@ var core = document.getElementById('core');
 var b = document.getElementById('b')
 
 var state = [1,2,3,4,5,6,7,8,9];
+
 var i = 1;
 
 var placeholder = false;
