@@ -46,12 +46,14 @@ function Ganha (vetorTabuleiro, jogador) {
 }
 
 function Jogue(posicao, jogada, vetorTabuleiro) {
-    if(n == 2) {
-        if(jogada%2 == 0) 
-            vetorTabuleiro[posicao - 1] = 5
-        else
-            vetorTabuleiro[posicao - 1] = 3
-        return jogada++ // Retorna o valor da proxima jogada
+    if(posicao <= 9) {
+        if(vetorTabuleiro[posicao] == 2) {
+            if(jogada%2 == 0) 
+                vetorTabuleiro[posicao - 1] = 5
+            else
+                vetorTabuleiro[posicao - 1] = 3
+            return jogada++ // Retorna o valor da proxima jogada
+        }
     }
     return jogada // Retorna a jogada atual, pois o movimento foi invalido
     
