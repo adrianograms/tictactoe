@@ -15,3 +15,8 @@ table, tr, th, td{
 div{
   text-align: center;
 }
+
+td,tr{
+  width: 199px;
+  height: 199px;
+}
