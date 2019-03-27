@@ -84,7 +84,7 @@ function update (){
   }
 }
 
-function Faz2 (vetorTabuleiro) {
+function Faz2 () {
     // O valor retorna é o indice + 1, de acordo com a especificação do problema
     if(vetorTabuleiro[4] == 2 )
         return 5
