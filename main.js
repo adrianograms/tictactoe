@@ -15,11 +15,11 @@ var state = [1,2,3,4,5,6,7,8,9];
 //Variavel de controle do estado atual
 var i = 1;
 
-//var placeholder = false;
+var player = 5;
 
-//Armazena as referencias das células da tabela no vetor cells
+//ArmazenaS as referencias das células da tabela no vetor cells
 //Além disso adiciona o evento onClick em cada célula
-for (var i = 0; i < 9; i++) {
+for (let i = 0; i < 9; i++) {
   cells[i] = document.getElementById('cell' + (i+1));
   cells[i].addEventListener("click",tclick);
 }
@@ -29,11 +29,20 @@ var table = false;
 
 //Função onClick dos botões (x,o)
 //Esconde os botões e atribui true para variavel de controle de inicio de jogo
-function action() {
+function actionx() {
   table = true;
+  player = 3;
   i = 0;
   bc.style.visibility = 'hidden';
   bx.style.visibility = 'hidden';
+}
+function actiono() {
+  table = true;
+  player = 5;
+  i = 0;
+  bc.style.visibility = 'hidden';
+  bx.style.visibility = 'hidden';
+  main();
 }
 
 //Função onClick da s células da tabela
@@ -52,8 +61,9 @@ function tclick(){
               img.alt = "o";
               this.appendChild(img);
             }
-            i= (i+1)%10; // Avança para o próximo estado de jogo
             update(); //Chama a função que atualiza o vetor Controle dos elementos da tabela
+            i = (i+1)%10; // Avança para o próximo estado de jogo
+            main();
             if(i == 9){ //Se i for igual a 9, isso quer dizer que a ultima jogada foi realizada e portanto o jogo reiniciará
               table = false;
               bc.style.visibility = 'visible';
@@ -72,7 +82,7 @@ function clean () {
 }
 //Função que atualiza o vetor de controle dos elementos da tabela
 function update (){
-  for (var i = 0; i < 9; i++) {
+  for (let i = 0; i < 9; i++) {
     var child = cells[i].firstChild;
     if(child != null){
       if(child.alt == "x")
@@ -87,67 +97,175 @@ function update (){
 function Faz2 () {
     // O valor retorna é o indice + 1, de acordo com a especificação do problema
     if(vetorTabuleiro[4] == 2 )
-        return 5
-    if(vetorTabuleiro[1] == 2)
-        return 2
-    if(vetorTabuleiro[3] == 2)
         return 4
+    if(vetorTabuleiro[1] == 2)
+        return 1
+    if(vetorTabuleiro[3] == 2)
+        return 3
     if(vetorTabuleiro[5] == 2)
-        return 6
+        return 5
     if(vetorTabuleiro[7] == 2)
-        return 8
-    return 0 //Retorna 0 caso não haja posições em branco (excluindo os cantos)
+        return 7
+    return -1 //Retorna 0 caso não haja posições em branco (excluindo os cantos)
 }
 
-function Ganha (vetorTabuleiro, jogador) {
+function Ganha (flag ) {
+    var jogador;
+    if(flag){
+      if(player == 3)
+        jogador = 5;
+      else {
+        jogador = 3;
+      }
+    }
+    else {
+      jogador = player;
+    }
     // O valor retorna é o indice + 1, de acordo com a especificação do problema
     valorVitoria = jogador*jogador*2
     if(vetorTabuleiro[0]*vetorTabuleiro[1]*vetorTabuleiro[2] == valorVitoria) {
         for(let i =0; i< 4; i++)
             if(vetorTabuleiro[i] == 2)
-                return i + 1
+                return cells[i]
     }
     if(vetorTabuleiro[3]*vetorTabuleiro[4]*vetorTabuleiro[5] == valorVitoria) {
         for(let i =3; i< 6; i++)
             if(vetorTabuleiro[i] == 2)
-                return i + 1
+                return cells[i]
     }
     if(vetorTabuleiro[6]*vetorTabuleiro[7]*vetorTabuleiro[8] == valorVitoria) {
         for(let i =6; i< 9; i++)
             if(vetorTabuleiro[i] == 2)
-                return i + 1
+                return cells[i]
     }
     if(vetorTabuleiro[0]*vetorTabuleiro[4]*vetorTabuleiro[8] == valorVitoria) {
         for(let i =0; i< 9; i = i+4)
             if(vetorTabuleiro[i] == 2)
-                return i + 1
+                return cells[i]
     }
     if(vetorTabuleiro[2]*vetorTabuleiro[4]*vetorTabuleiro[6] == valorVitoria) {
         for(let i =2; i< 8; i = i+2)
             if(vetorTabuleiro[i] == 2)
-                return i + 1
+                return cells[i]
     }
-    return 0 // Retrona 0 caso não haja ainda a possibilidade de ganhar
+    return null // Retrona null caso não haja ainda a possibilidade de ganhar
 
 }
 
-function Jogue(posicao, jogada, vetorTabuleiro) {
-    if(posicao <= 9) {
-        if(vetorTabuleiro[posicao] == 2) {
-            if(jogada%2 == 0)
-                vetorTabuleiro[posicao - 1] = 5
-            else
-                vetorTabuleiro[posicao - 1] = 3
-            return jogada++ // Retorna o valor da proxima jogada
+function Jogue(cell){
+    if(table){
+        if(!cell.firstChild) {
+            if(state[i]%2) {
+              var img = document.createElement('img');
+              img.src = "x.png";
+              img.alt = "x";
+              cell.appendChild(img);
+            }
+            else {
+              var img = document.createElement('img');
+              img.src = "circle.png";
+              img.alt = "o";
+              cell.appendChild(img);
+            }
+            i = (i+1)%10;
+            update();
+            if(i == 9){
+              table = false;
+              bc.style.visibility = 'visible';
+              bx.style.visibility = 'visible';
+              clean();
+            }
         }
     }
-    return jogada // Retorna a jogada atual, pois o movimento foi invalido
-
 }
 
+function Blank() {
+  for(let cell in cells) {
+    if(!cell.firstChild) {
+      return cell;
+    }
+  }
+  return null;
+}
 
+function main() {
+  switch (i) {
+    case 0:
+      Jogue(cells[0]);
+      break;
+    case 1:
+      if(!cells[4].firstChild)
+          Jogue(cells[4]);
+      else {
+        Jogue(cells[0]);
+      }
+      break;
+    case 2:
+      if(!cells[8].firstChild)
+          Jogue(cells[8]);
+      else {
+        Jogue(cells[2]);
+      }
+      break;
+    case 3:
+      var g = Ganha(1);
+      if(g != null) {
+        Jogue(g);
+      }
+      else {
+        Jogue(cells[Faz2()]);
+      }
+      break;
+    case 4:
+      var g = Ganha(1);
+      if(g != null) {
+        Jogue(g);
+      }
+      else if(g = Ganha(0) && g != null) {
+        Jogue(g);
+      }
+      else {
+        if(!cells[6].firstChild) {
+          Jogue(cells[6]);
+        }
+        else {
+          Jogue(cells[2]);
+        }
+      }
+      break;
+    case 5:
+      var g = Ganha(1);
+      if(g != null) {
+        Jogue(g);
+      }
+      else {
+        g = Ganha(0);
+        if(g != null) {
+          Jogue(g);
+        }
+        else {
+          Jogue(cells[Faz2()]);
+        }
+      }
+      break;
+    default:
+    var g = Ganha(1);
+    if(g != null) {
+      Jogue(g);
+    }
+    else {
+      g = Ganha(0);
+      if(g != null) {
+        Jogue(g);
+      }
+      else {
+        Jogue(Blank());
+      }
+    }
+      break;
+  }
 
-
+}
 
 
 
