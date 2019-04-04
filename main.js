@@ -65,9 +65,6 @@ function tclick(){
             i = (i+1)%10; // Avança para o próximo estado de jogo
             main();
             if(i == 9){ //Se i for igual a 9, isso quer dizer que a ultima jogada foi realizada e portanto o jogo reiniciará
-              table = false;
-              bc.style.visibility = 'visible';
-              bx.style.visibility = 'visible';
               clean();
             }
         }
@@ -75,6 +72,9 @@ function tclick(){
 }
 //Função que reseta as váriaveis e vetores para um estado inicial de jogo
 function clean () {
+  table = false;
+  bc.style.visibility = 'visible';
+  bx.style.visibility = 'visible';
   for (var i = 0; i < 9; i++) {
     cells[i].innerHTML ="";
   }
@@ -106,8 +106,14 @@ function Faz2 () {
         return 5
     if(vetorTabuleiro[7] == 2)
         return 7
-    return -1 //Retorna 0 caso não haja posições em branco (excluindo os cantos)
-}
+        for(let i = 0; i< 9; i++) {
+          if(!cells[i].firstChild) {
+            return i;
+          }
+        }
+      return null;
+    }
+
 
 function Ganha (flag ) {
     var jogador;
@@ -152,6 +158,39 @@ function Ganha (flag ) {
 
 }
 
+function Ganhador (flag ) {
+  var jogador;
+  if(flag){
+    if(player == 3)
+      jogador = 5;
+    else {
+      jogador = 3;
+    }
+  }
+  else {
+    jogador = player;
+  }
+  // O valor retorna é o indice + 1, de acordo com a especificação do problema
+  valorVitoria = jogador*jogador*jogador
+  if(vetorTabuleiro[0]*vetorTabuleiro[1]*vetorTabuleiro[2] == valorVitoria) {
+      return true
+  }
+  if(vetorTabuleiro[3]*vetorTabuleiro[4]*vetorTabuleiro[5] == valorVitoria) {
+     return true
+  }
+  if(vetorTabuleiro[6]*vetorTabuleiro[7]*vetorTabuleiro[8] == valorVitoria) {
+      return true
+  }
+  if(vetorTabuleiro[0]*vetorTabuleiro[4]*vetorTabuleiro[8] == valorVitoria) {
+      return true
+  }
+  if(vetorTabuleiro[2]*vetorTabuleiro[4]*vetorTabuleiro[6] == valorVitoria) {
+      return true
+  }
+  return false // Retrona null caso não haja ainda a possibilidade de ganhar
+
+}
+
 function Jogue(cell){
     if(table){
         if(!cell.firstChild) {
@@ -169,24 +208,21 @@ function Jogue(cell){
             }
             i = (i+1)%10;
             update();
+            if(Ganhador(0)) {
+              alert("Parabens, você ganhou!")
+              clean()
+            }
+            else if(Ganhador(1)) {
+              alert("Parabens, você perdeu!")
+              clean()
+            }
             if(i == 9){
-              table = false;
-              bc.style.visibility = 'visible';
-              bx.style.visibility = 'visible';
               clean();
             }
         }
     }
 }
 
-function Blank() {
-  for(let cell in cells) {
-    if(!cell.firstChild) {
-      return cell;
-    }
-  }
-  return null;
-}
 
 function main() {
   switch (i) {
@@ -249,21 +285,23 @@ function main() {
       }
       break;
     default:
-    var g = Ganha(1);
-    if(g != null) {
-      Jogue(g);
-    }
-    else {
-      g = Ganha(0);
+    if (i < 9) {
+      var g = Ganha(1);
       if(g != null) {
         Jogue(g);
       }
       else {
-        Jogue(Blank());
+        g = Ganha(0);
+        if(g != null) {
+          Jogue(g);
+        }
+        else {
+          Jogue(cells[Faz2()]);
+        }
       }
-    }
-      break;
+        break;
   }
+}
 
 }
 
