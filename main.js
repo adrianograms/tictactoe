@@ -46,7 +46,7 @@ function actiono() {
 }
 
 //Função onClick da s células da tabela
-function tclick(){
+async function tclick(){
     if(table){ //Só executa quando a variavel table é true, ou seja, quando o jogo foi iniciado
         if(!this.firstChild) { // Só pode ser clickavél as células em branco,
             if(state[i]%2) { //Se o resultado for diferente de zero é uma rodada impar, ou seja, é marcado x
@@ -62,6 +62,16 @@ function tclick(){
               this.appendChild(img);
             }
             update(); //Chama a função que atualiza o vetor Controle dos elementos da tabela
+            if(Ganhador(0)) {
+              await sleep(100);
+              alert("Parabens, você ganhou!")
+              clean()
+            }
+            else if(Ganhador(1)) {
+              await sleep(100);
+              alert("Parabens, você perdeu!")
+              clean()
+            }
             i = (i+1)%10; // Avança para o próximo estado de jogo
             main();
             if(i == 9){ //Se i for igual a 9, isso quer dizer que a ultima jogada foi realizada e portanto o jogo reiniciará
@@ -154,6 +164,21 @@ function Ganha (flag ) {
             if(vetorTabuleiro[i] == 2)
                 return cells[i]
     }
+    if(vetorTabuleiro[0]*vetorTabuleiro[3]*vetorTabuleiro[6] == valorVitoria) {
+      for(let i =0; i< 7; i = i+3)
+          if(vetorTabuleiro[i] == 2)
+              return cells[i]
+    }
+    if(vetorTabuleiro[1]*vetorTabuleiro[4]*vetorTabuleiro[7] == valorVitoria) {
+      for(let i =1; i< 8; i = i+3)
+          if(vetorTabuleiro[i] == 2)
+              return cells[i]
+    }
+    if(vetorTabuleiro[2]*vetorTabuleiro[5]*vetorTabuleiro[8] == valorVitoria) {
+      for(let i =2; i< 9; i = i+3)
+          if(vetorTabuleiro[i] == 2)
+              return cells[i]
+    }
     return null // Retrona null caso não haja ainda a possibilidade de ganhar
 
 }
@@ -187,11 +212,20 @@ function Ganhador (flag ) {
   if(vetorTabuleiro[2]*vetorTabuleiro[4]*vetorTabuleiro[6] == valorVitoria) {
       return true
   }
+  if(vetorTabuleiro[0]*vetorTabuleiro[3]*vetorTabuleiro[6] == valorVitoria) {
+    return true
+  }
+  if(vetorTabuleiro[1]*vetorTabuleiro[4]*vetorTabuleiro[7] == valorVitoria) {
+    return true
+  }
+  if(vetorTabuleiro[2]*vetorTabuleiro[5]*vetorTabuleiro[8] == valorVitoria) {
+    return true
+  }
   return false // Retrona null caso não haja ainda a possibilidade de ganhar
 
 }
 
-function Jogue(cell){
+async function Jogue(cell){
     if(table){
         if(!cell.firstChild) {
             if(state[i]%2) {
@@ -209,10 +243,12 @@ function Jogue(cell){
             i = (i+1)%10;
             update();
             if(Ganhador(0)) {
+              await sleep(100);
               alert("Parabens, você ganhou!")
               clean()
             }
             else if(Ganhador(1)) {
+              await sleep(100);
               alert("Parabens, você perdeu!")
               clean()
             }
@@ -221,6 +257,10 @@ function Jogue(cell){
             }
         }
     }
+}
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 
